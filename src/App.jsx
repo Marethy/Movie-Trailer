@@ -1,18 +1,13 @@
-// src/App.jsx
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ContactPage from "./pages/ContactPage";
-import Banner from "./components/Banner";
-import Header from "./components/Header";
-import MovieList from "./components/MovieList";
-import MovieSearch from "./components/MovieSearch";
+import MovieDetailPage from "./pages/MovieDetailPage";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import { MovieProvider } from "./context/MovieDetailContext";
-import Footer from "./components/Footer";
 
 function App() {
-  const [trendingMovies, setTrendingMovies] = useState([]);
-  const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [searchData, setSearchData] = useState([]);
 
   const handleSearch = async (value) => {
@@ -34,55 +29,18 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    (async function () {
-      const urls = [
-        "https://api.themoviedb.org/3/trending/movie/day?language=vi",
-        "https://api.themoviedb.org/3/movie/top_rated?language=vi",
-      ];
-      const options = {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
-        },
-      };
-      const fetchMovies = async (url) => {
-        return await fetch(url, options).then((response) => response.json());
-      };
-
-      try {
-        const response = await Promise.all(urls.map(fetchMovies));
-        setTrendingMovies(response[0].results);
-        setTopRatedMovies(response[1].results);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
-
   return (
     <Router>
       <MovieProvider>
         <div className="h-full bg-black text-white min-h-screen pb-10 relative">
           <Header onSearch={handleSearch} />
           <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Banner />
-                  {searchData.length === 0 && (
-                    <MovieList title="Phim Hot" data={trendingMovies.slice(0, 10)} />
-                  )}
-                  {searchData.length === 0 && (
-                    <MovieList title="Phim đề cử" data={topRatedMovies.slice(0, 10)} />
-                  )}
-                  {searchData.length > 0 && <MovieSearch data={searchData} />}
-                </>
-              }
-            />
-            <Route path="/contact" element={<ContactPage />} />
+            {/* Chuyển hướng mặc định tới trang chủ nếu đường dẫn là "/" */}
+            <Route path="/" element={<Navigate to="/cinema" />} />
+            <Route path="/cinema" element={<HomePage/>} />
+            <Route path="/cinema/contact" element={<ContactPage />} />
+            <Route path="/cinema/movies/:id" element={<MovieDetailPage />} />
+
           </Routes>
           <Footer />
         </div>

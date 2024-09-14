@@ -1,12 +1,20 @@
-// src/components/Footer.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
-import facebookLogo from '../assets/facebook-logo.png';
-import instagramLogo from '../assets/instagram-logo.png';
+import facebookLogo from "../../assets/icons/facebook-logo.png";
+import instagramLogo from "../../assets/icons/instagram-logo.png";
+import footerBackground from "../../assets/images/footer-bg.jpg"; // Import ảnh nền
 
 const Footer = () => {
     return (
-        <footer className="bg-gray-800 text-white py-4">
+        <footer
+            className="bg-gray-800 text-white py-4"
+            style={{
+                backgroundImage: `url(${footerBackground})`,  // Thêm ảnh nền
+                backgroundSize: 'cover',                      // Ảnh nền phủ kín
+                backgroundPosition: 'center',                 // Vị trí trung tâm
+                backgroundRepeat: 'no-repeat',                // Không lặp lại ảnh nền
+            }}
+        >
             <div className="container mx-auto text-center">
                 <div className="mb-4">
                     <p className="mb-2">&copy; {new Date().getFullYear()} Movie Trailer Web.</p>
@@ -28,8 +36,6 @@ const Footer = () => {
     );
 };
 
-Footer.propTypes = {
-    // You can add PropTypes here if needed for customization
-};
-
-export default Footer;
+Footer.propTypes = {    
+}
+export default Footer;  

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useContext } from "react";
-import { MovieContext } from "../context/MovieDetailContext";
+import { MovieContext } from "../../context/MovieDetailContext";
 
 const MovieSearch = ({ data }) => {
   const { handleVideoTrailer } = useContext(MovieContext);

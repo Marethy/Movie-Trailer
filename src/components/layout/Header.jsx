@@ -14,10 +14,10 @@ const Header = ({ onSearch }) => {
           <Link to="/" className="hover:text-red-700">
             Home
           </Link>
-          <Link to="/about" className="hover:text-red-700">
+          <Link to="/cinema/about" className="hover:text-red-700">
             About
           </Link>
-          <Link to="/contact" className="hover:text-red-700">
+          <Link to="/cinema/contact" className="hover:text-red-700">
             Contact
           </Link>
         </nav>

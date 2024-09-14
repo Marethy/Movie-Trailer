@@ -1,7 +1,7 @@
-import IconRatingHalf from "../assets/rating-half.png";
-import IconRating from "../assets/rating.png";
-import ImgMovie from "../assets/temp-1.jpeg";
-import IconPlay from "../assets/play-button.png";
+import IconRatingHalf from "../assets/icons/rating-half.png";
+import IconRating from "../assets/icons/rating.png";
+import ImgMovie from "../assets/images/temp-1.jpeg";
+import IconPlay from "../assets/icons/play-button.png";
 
 
 const Banner = () => {
