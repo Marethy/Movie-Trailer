@@ -3,9 +3,12 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-d
 import HomePage from "./pages/HomePage";
 import ContactPage from "./pages/ContactPage";
 import MovieDetailPage from "./pages/MovieDetailPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { MovieProvider } from "./context/MovieDetailContext";
+import MovieSearch from "./components/movie/MovieSearch";
 
 function App() {
   const [searchData, setSearchData] = useState([]);
@@ -33,14 +36,14 @@ function App() {
     <Router>
       <MovieProvider>
         <div className="h-full bg-black text-white min-h-screen pb-10 relative">
-          <Header onSearch={handleSearch} />
+          <Header />
           <Routes>
-            {/* Chuyển hướng mặc định tới trang chủ nếu đường dẫn là "/" */}
             <Route path="/" element={<Navigate to="/cinema" />} />
-            <Route path="/cinema" element={<HomePage/>} />
+            <Route path="/cinema" element={<HomePage />} />
             <Route path="/cinema/contact" element={<ContactPage />} />
             <Route path="/cinema/movies/:id" element={<MovieDetailPage />} />
-
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
           </Routes>
           <Footer />
         </div>

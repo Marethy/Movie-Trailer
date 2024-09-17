@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
+    "@material-tailwind/react": "^2.1.10",
     "axios": "^1.7.7",
     "movie-app": "file:",
     "react": "^18.2.0",
@@ -17,6 +19,7 @@
     "react-modal": "^3.16.1",
     "react-multi-carousel": "^2.8.5",
     "react-router-dom": "^6.26.0",
+    "react-toastify": "^10.0.5",
     "react-youtube": "^10.1.0"
   },
   "devDependencies": {

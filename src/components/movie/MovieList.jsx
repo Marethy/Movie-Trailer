@@ -25,7 +25,6 @@ const responsive = {
 };
 
 const MovieList = ({ title, data }) => {
-  const { handleVideoTrailer } = useContext(MovieContext);
   const navigate = useNavigate();
 
 

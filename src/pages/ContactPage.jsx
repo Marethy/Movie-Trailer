@@ -5,8 +5,8 @@ import React from 'react';
 
 const ContactPage = () => {
   return (
-    <div className="container mx-auto px-4 py-8 text-black">
-      <h1 className="text-3xl font-bold mb-6 text-center">Contact Us</h1>
+    <div className="container mx-auto px-4 py-8 text-black  pt-20">
+      <h1 className="text-3xl font-bold mb-6 text-center text-white">Contact Us</h1>
       <div className="flex flex-col md:flex-row md:justify-between">
         <div className="md:w-1/2">
           <form className="bg-white p-6 rounded-lg shadow-md ">
