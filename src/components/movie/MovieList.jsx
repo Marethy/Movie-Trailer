@@ -4,6 +4,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { MovieContext } from "../../context/MovieDetailContext";
 import { useNavigate } from 'react-router-dom';
+import Modal from "react-modal"; 
 
 const responsive = {
   superLargeDesktop: {

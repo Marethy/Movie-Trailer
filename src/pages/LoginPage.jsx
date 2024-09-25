@@ -18,7 +18,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className= "container mx-auto my-auto ">
+        <div className= "container mx-auto my-auto py ">
             <h1 className="text-3xl font-bold mb-6 text-center text-white"> 
                 LoginPage
             </h1>
