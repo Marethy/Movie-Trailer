@@ -42,7 +42,7 @@ const MovieList = ({ title, data }) => {
                 movie.poster_path
               })`,
             }}
-            onClick={() => navigate(`/cinema/movies/${movie.id}`)}
+            onClick={() => navigate(`/user/movies/${movie.id}`)}
 
           >
             <div className="bg-black w-full h-full opacity-40 absolute top-0 left-0 z-0" />

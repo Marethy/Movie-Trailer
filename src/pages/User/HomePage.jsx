@@ -1,8 +1,8 @@
 import React from "react";
-import Banner from "../components/Banner";
-import MovieList from "../components/movie/MovieList";
-import MovieSearch from "../components/movie/MovieSearch";
-import useFetchMovies from "../hooks/useFetchMovies";
+import Banner from "../../components/Banner";
+import MovieList from "../../components/movie/MovieList";
+import MovieSearch from "../../components/movie/MovieSearch";
+import useFetchMovies from "../../hooks/useFetchMovies";
 
 const HomePage = ({ searchData }) => {
   const { trendingMovies, topRatedMovies, isLoading } = useFetchMovies();
@@ -12,7 +12,7 @@ const HomePage = ({ searchData }) => {
   return (
     <div>
       <Banner />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 text-white" >
         {searchData.length > 0 ? (
           <MovieSearch title="Kết quả tìm kiếm" data={searchData} />
         ) : (

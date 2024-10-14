@@ -12,9 +12,9 @@ const Header = ({ isEmployeeMode, setIsEmployeeMode, setSearchData }) => {
 
     // Navigate to the EmployeeDashboard if switching to employee mode
     if (!isEmployeeMode) {
-      navigate("/employee");
+      navigate("/admin");
     } else {
-      navigate("/cinema");
+      navigate("/user");
     }
   };
   const handleSearch = async () => {
@@ -37,9 +37,9 @@ const Header = ({ isEmployeeMode, setIsEmployeeMode, setSearchData }) => {
   };
 
   return (
-    <div className="p-4 flex justify-between fixed top-0 left-0 w-full z-[9999] bg-black">
+    <div className="p-4 flex justify-between relative w-full z-[9999] bg-black">
       <div className="flex items-center gap-8">
-        <nav className="hidden md:flex items-center space-x-5">
+        <nav className="hidden md:flex items-center space-x-5 text-white">
           <Link to="/" className="text-[30px] uppercase text-red-700 font-bold">
             Movie
           </Link>

@@ -10,6 +10,7 @@ export default {
         'banner' : "url('/banner.png')",
       }
     },
+    port: 3000,
   },
   plugins: [],
 }

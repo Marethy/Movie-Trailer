@@ -29,8 +29,9 @@ const useFetchMovies = () => {
         const response = await Promise.all(urls.map(fetchMovies));
         setTrendingMovies(response[0].results);
         setTopRatedMovies(response[1].results);
-        console.log(response[0]);
+        console.log(response[0].results);
       } catch (error) {
+        
         console.error("Error fetching movies:", error);
       } finally {
         setIsLoading(false);
