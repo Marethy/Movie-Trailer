@@ -34,7 +34,7 @@ const AdminDashboard = () => {
       await getAccessToken();
 
       try {
-        const userData = await getUser2(1);
+        const userData = await getUser(1);
         console.log('Fetched user data:', userData);
         setUser(userData);
       } catch (error) {

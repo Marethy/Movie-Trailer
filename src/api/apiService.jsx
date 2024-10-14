@@ -1,10 +1,10 @@
 import axios from "axios";
 import qs from "qs"; // Import the qs library to encode data
 
-const BASE_URL = "http://localhost:8092";
+const BASE_URL = "http://localhost:9091";
 
-const TOKEN_URL = "http://localhost:8092/oauth2/v1/token";
-const REFRESH_TOKEN_URL = "http://localhost:8092/oauth2/v1/token";
+const TOKEN_URL = "http://localhost:9091/api/oauth2/v1/token";
+const REFRESH_TOKEN_URL = "http://localhost:9091/api/oauth2/v1/token";
 
 let accessToken = "";
 let refreshToken = "";
