@@ -33,6 +33,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         const userData = await UserApi.getUser(1);
         setUser(userData);
 
