@@ -1,64 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Breadcrumb, Input, Button, Spin, message } from 'antd';
-import {
-  DesktopOutlined,
-  PieChartOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
-  HomeOutlined,
-  VideoCameraOutlined,
-  ShoppingOutlined,
-  ShopOutlined,
-  DollarOutlined,
-} from '@ant-design/icons';
-import { getAccessToken, getUser2, getMovies,getUser } from '../../api/apiService';
-import MovieList from '../../components/movie/MovieList';
-import useFetchMovies from '../../hooks/useFetchMovies';
-import UserDetail from '../../components/user/UserDetail';
+import { Layout, Spin, message, Input, Button } from 'antd';
+import UserApi from '../../api/userApi';
+import MovieApi from '../../api/movieApi';
+import ShowtimeApi from '../../api/showtimeApi';
+import ProjectionRoomApi from '../../api/projectionRoomApi';
+import TheaterApi from '../../api/theaterApi';
+import MessageApi from '../../api/messageApi';
+import RedisApi from '../../api/redisApi';
+import SidebarMenu from '../../components/admin/SidebarMenu';
+import BreadcrumbNav from '../../components/admin/BreadcrumbNav';
+import UserDetail from '../../components/admin/UserDetail';
+import MovieList from '../../components/admin/MovieList';
+import ShowtimeList from '../../components/admin/ShowtimeList';
+import ProjectionRoomList from '../../components/admin/ProjectionRoomList';
+import TheaterList from '../../components/admin/TheaterList';
+import MessageList from '../../components/admin/MessageList';
 
 const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
 const { Search } = Input;
 
 const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [user, setUser] = useState(null);
   const [selectedMenuItem, setSelectedMenuItem] = useState('1');
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [loadingMovies, setLoadingMovies] = useState(true);
-  const { trendingMovies, topRatedMovies, isLoading: isLoadingMovies } = useFetchMovies();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [movies, setMovies] = useState([]);
+  const [showtimes, setShowtimes] = useState([]);
+  const [projectionRooms, setProjectionRooms] = useState([]);
+  const [theaters, setTheaters] = useState([]);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      await getAccessToken();
-
       try {
-        const userData = await getUser2(1);
-        console.log('Fetched user data:', userData);
+        const userData = await UserApi.getUser(1);
         setUser(userData);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        message.error('Failed to load user data');
-      } finally {
-        setLoadingUser(false);
-      }
-    };
 
-    const fetchMovies = async () => {
-      try {
-        const movieData = await getMovies();
-        console.log('Fetched movie data:', movieData);
+        const movieData = await MovieApi.getMovies();
+        setMovies(movieData);
+
+        const showtimeData = await ShowtimeApi.getShowtimesByMovieId(1); // Example movie ID
+        setShowtimes(showtimeData);
+
+        const projectionRoomData = await ProjectionRoomApi.getAllRoomByMovieID(1); // Example movie ID
+        setProjectionRooms(projectionRoomData);
+
+        const theaterData = await TheaterApi.getTheaters();
+        setTheaters(theaterData);
+
+        const messageData = await MessageApi.getMessage();
+        setMessages(messageData);
       } catch (error) {
-        console.error('Error fetching movie data:', error);
-        message.error('Failed to load movie data');
+        console.error('Error fetching data:', error);
+        message.error('Failed to load data');
       } finally {
-        setLoadingMovies(false);
+        setLoading(false);
       }
     };
 
     fetchData();
-    fetchMovies();
   }, []);
 
   const onCollapse = (collapsed) => {
@@ -69,53 +69,23 @@ const AdminDashboard = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="logo" />
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<HomeOutlined />} onClick={() => setSelectedMenuItem('1')}>Home</Menu.Item>
-          <Menu.Item key="2" icon={<UserOutlined />} onClick={() => setSelectedMenuItem('2')}>Employee</Menu.Item>
-          <Menu.Item key="3" icon={<VideoCameraOutlined />} onClick={() => setSelectedMenuItem('3')}>Movies</Menu.Item>
-          <Menu.Item key="4" icon={<ShoppingOutlined />} onClick={() => setSelectedMenuItem('4')}>Products</Menu.Item>
-          <Menu.Item key="5" icon={<ShopOutlined />} onClick={() => setSelectedMenuItem('5')}>Theaters</Menu.Item>
-          <Menu.Item key="6" icon={<DollarOutlined />} onClick={() => setSelectedMenuItem('6')}>Receipts</Menu.Item>
-          <Menu.Item key="7" icon={<PieChartOutlined />} onClick={() => setSelectedMenuItem('7')}>Dashboard</Menu.Item>
-          <Menu.Item key="8" icon={<DesktopOutlined />} onClick={() => setSelectedMenuItem('8')}>Option 2</Menu.Item>
-          <SubMenu key="sub1" icon={<TeamOutlined />} title="Team">
-            <Menu.Item key="9" onClick={() => setSelectedMenuItem('9')}>Team 1</Menu.Item>
-            <Menu.Item key="10" onClick={() => setSelectedMenuItem('10')}>Team 2</Menu.Item>
-          </SubMenu>
-          <Menu.Item key="11" icon={<FileOutlined />} onClick={() => setSelectedMenuItem('11')}>Files</Menu.Item>
-        </Menu>
+        <SidebarMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} />
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }} />
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-            <Breadcrumb.Item>
-              {selectedMenuItem === '3' ? 'Movies' : selectedMenuItem === '2' ? 'Employee' : 'Home'}
-            </Breadcrumb.Item>
-          </Breadcrumb>
+          <BreadcrumbNav selectedMenuItem={selectedMenuItem} />
           <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-            {/* Display User Detail when Employee is selected */}
-            {selectedMenuItem === '2' && (
-              loadingUser ? (
-                <Spin tip="Loading user data..." />
-              ) : (
-                <UserDetail user={user} />
-              )
-            )}
-
-            {/* Display Movie List when Movies is selected */}
-            {selectedMenuItem === '3' && (
+            {loading ? (
+              <Spin tip="Loading data..." />
+            ) : (
               <>
-                <div style={{ margin: '16px 0' }}>
-                  <Search placeholder="Search for movies..." style={{ width: 200 }} />
-                  <Button type="primary" style={{ marginLeft: '10px' }}>Filter by Date</Button>
-                </div>
-                {loadingMovies || isLoadingMovies ? (
-                  <Spin tip="Loading movies..." />
-                ) : (
-                  <MovieList title="Trending Movies" data={trendingMovies} />
-                )}
+                {selectedMenuItem === '1' && <UserDetail user={user} />}
+                {selectedMenuItem === '2' && <MovieList movies={movies} />}
+                {selectedMenuItem === '3' && <ShowtimeList showtimes={showtimes} />}
+                {selectedMenuItem === '4' && <ProjectionRoomList projectionRooms={projectionRooms} />}
+                {selectedMenuItem === '5' && <TheaterList theaters={theaters} />}
+                {selectedMenuItem === '6' && <MessageList messages={messages} />}
               </>
             )}
           </div>
