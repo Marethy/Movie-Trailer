@@ -1,7 +1,8 @@
-import { axiosInstance, TokenManager } from "./apiClient";
+import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
 
 const ShowtimeApi = {
   async createShowtime(showtimeData, movieId, theaterId, roomId) {
+    configureAxios();
     try {
       const response = await axiosInstance.post(`/showtime`, showtimeData, {
         params: { movie: movieId, theater: theaterId, projectionRoom: roomId },
@@ -17,6 +18,7 @@ const ShowtimeApi = {
   },
 
   async getShowtimesByMovieId(id) {
+    configureAxios();
     try {
       const response = await axiosInstance.get(`/showtime/movie/${id}`);
       return response.data;
@@ -30,6 +32,7 @@ const ShowtimeApi = {
   },
 
   async getShowtimesByRoomId(id) {
+    configureAxios();
     try {
       const response = await axiosInstance.get(`/showtime/room/${id}`);
       return response.data;
@@ -43,6 +46,7 @@ const ShowtimeApi = {
   },
 
   async updateShowtime(id, showtimeData) {
+    configureAxios();
     try {
       const response = await axiosInstance.put(`/showtime/${id}`, showtimeData);
       return response.data;
@@ -56,6 +60,7 @@ const ShowtimeApi = {
   },
 
   async getShowtimeFromOrder(requests) {
+    configureAxios();
     try {
       const response = await axiosInstance.post(`/showtime/order`, requests);
       return response.data;
@@ -66,7 +71,7 @@ const ShowtimeApi = {
       console.error("Error fetching showtime from order:", error);
       throw error;
     }
-  },
+  }
 };
 
 export default ShowtimeApi;

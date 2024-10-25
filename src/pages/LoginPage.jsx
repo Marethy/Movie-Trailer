@@ -1,62 +1,66 @@
-// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
+import { Form, Input, Button, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { TokenManager } from '../api/apiClient'; // Remove axiosInstance as we will call TokenManager
+import axios from 'axios';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const onFinish = async (values) => {
+    setLoading(true);
+    try {
+      // Lưu username và password vào localStorage hoặc state
+      localStorage.setItem('username', values.username);
+      localStorage.setItem('password', values.password);
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+      // Gọi hàm lấy access token với username và password
+      const accessToken = await TokenManager.getAccessToken({
+        username: values.username,
+        password: values.password,
+      });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your login logic here
+      // Sau khi nhận token, điều hướng tùy theo quyền user
+      if (accessToken) {
+        navigate('/admin'); // Redirect to admin if role is ADMIN
+      } else {
+        navigate('/user'); // Redirect to user homepage
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      message.error('Failed to login');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="container mx-auto my-auto py-10">
-      <h1 className="text-3xl font-bold mb-6 text-center text-white">Login</h1>
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-gray-800 p-8 rounded-lg">
-        <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="email">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={handleEmailChange}
-            className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-lg focus:outline-none"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-            className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-lg focus:outline-none"
-            required
-          />
-        </div>
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none"
-          >
+    <div className="login-container">
+      <h2>Login</h2>
+      <Form
+        name="login"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+      >
+        <Form.Item
+          name="username"
+          rules={[{ required: true, message: 'Please input your username!' }]}
+        >
+          <Input placeholder="Username" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password placeholder="Password" />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" loading={loading}>
             Login
-          </button>
-        </div>
-      </form>
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

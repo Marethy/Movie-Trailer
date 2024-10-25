@@ -1,7 +1,8 @@
-import { axiosInstance, TokenManager } from "./apiClient";
+import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
 
 const MessageApi = {
   async getMessage() {
+    configureAxios();
     try {
       const response = await axiosInstance.get(`/message`);
       return response.data;
@@ -12,7 +13,7 @@ const MessageApi = {
       console.error("Error fetching message:", error);
       throw error;
     }
-  },
+  }
 };
 
 export default MessageApi;

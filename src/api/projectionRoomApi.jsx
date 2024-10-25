@@ -1,7 +1,8 @@
-import { axiosInstance, TokenManager } from "./apiClient";
+import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
 
 const ProjectionRoomApi = {
   async getAllRoomByMovieID(id) {
+    configureAxios();
     try {
       const response = await axiosInstance.get(`/projectionRoom/movie/${id}`);
       return response.data;
@@ -15,6 +16,7 @@ const ProjectionRoomApi = {
   },
 
   async createRoom(theaterId, roomData) {
+    configureAxios();
     try {
       const response = await axiosInstance.post(`/projectionRoom/theater/${theaterId}`, roomData);
       return response.data;
@@ -25,7 +27,7 @@ const ProjectionRoomApi = {
       console.error("Error creating projection room:", error);
       throw error;
     }
-  },
+  }
 };
 
 export default ProjectionRoomApi;

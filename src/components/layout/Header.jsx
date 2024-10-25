@@ -3,20 +3,10 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-const Header = ({ isEmployeeMode, setIsEmployeeMode, setSearchData }) => {
+const Header = ({ setSearchData }) => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const handleEmployeeModeToggle = () => {
-    setIsEmployeeMode(!isEmployeeMode);
-
-    // Navigate to the EmployeeDashboard if switching to employee mode
-    if (!isEmployeeMode) {
-      navigate("/admin");
-    } else {
-      navigate("/user");
-    }
-  };
   const handleSearch = async () => {
     const url = `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&language=vi&page=1`;
     const options = {
@@ -43,16 +33,12 @@ const Header = ({ isEmployeeMode, setIsEmployeeMode, setSearchData }) => {
           <Link to="/" className="text-[30px] uppercase text-red-700 font-bold">
             Movie
           </Link>
-          {!isEmployeeMode && (
-            <>
-              <Link to="/" className="hover:text-red-700">
-                Home
-              </Link>
-              <Link to="/cinema/contact" className="hover:text-red-700">
-                Contact
-              </Link>
-            </>
-          )}
+          <Link to="/" className="hover:text-red-700">
+            Home
+          </Link>
+          <Link to="/cinema/contact" className="hover:text-red-700">
+            Contact
+          </Link>
         </nav>
       </div>
       <div className="flex items-center space-x-5">
@@ -71,9 +57,9 @@ const Header = ({ isEmployeeMode, setIsEmployeeMode, setSearchData }) => {
         </button>
         <button
           className="ml-4 bg-blue-600 text-white px-3 py-1 rounded-lg"
-          onClick={() => handleEmployeeModeToggle()}
+          onClick={() => navigate("/login")}
         >
-          Switch to {isEmployeeMode ? "User" : "Employee"} Mode
+          Login
         </button>
       </div>
     </div>
@@ -81,8 +67,6 @@ const Header = ({ isEmployeeMode, setIsEmployeeMode, setSearchData }) => {
 };
 
 Header.propTypes = {
-  isEmployeeMode: PropTypes.bool.isRequired,
-  setIsEmployeeMode: PropTypes.func.isRequired,
   setSearchData: PropTypes.func.isRequired,
 };
 

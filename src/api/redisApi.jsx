@@ -1,7 +1,8 @@
-import { axiosInstance, TokenManager } from "./apiClient";
+import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
 
 const RedisApi = {
   async addTicketToOrder(userId, addTicketRequest) {
+    configureAxios();
     try {
       const response = await axiosInstance.post(`/redis`, addTicketRequest, {
         headers: { "X-Auth-User-Id": userId },
@@ -17,6 +18,7 @@ const RedisApi = {
   },
 
   async getSeatsOrdered(userId) {
+    configureAxios();
     try {
       const response = await axiosInstance.get(`/redis/customer`, {
         headers: { "X-Auth-User-Id": userId },
@@ -32,6 +34,7 @@ const RedisApi = {
   },
 
   async deleteTicketFromOrder(userId, deleteTicketRequest) {
+    configureAxios();
     try {
       const response = await axiosInstance.delete(`/redis/ticket`, {
         headers: { "X-Auth-User-Id": userId },
@@ -48,6 +51,7 @@ const RedisApi = {
   },
 
   async deleteAllTicketsFromOrder(userId) {
+    configureAxios();
     try {
       const response = await axiosInstance.delete(`/redis/all`, {
         headers: { "X-Auth-User-Id": userId },
@@ -60,7 +64,7 @@ const RedisApi = {
       console.error("Error deleting all tickets from order:", error);
       throw error;
     }
-  },
+  }
 };
 
 export default RedisApi;

@@ -1,9 +1,10 @@
-import { axiosInstance, TokenManager } from "./apiClient";
+import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
 
 const AuthApi = {
   async login(credentials) {
+    configureAxios();
     try {
-      const response = await axiosInstance.post(`/auth/login`, credentials);
+      const response = await axiosInstance.post(`api/v1/auth/login`, credentials);
       return response.data;
     } catch (error) {
       console.error("Error logging in:", error);
@@ -12,8 +13,9 @@ const AuthApi = {
   },
 
   async register(userData) {
+    configureAxios();
     try {
-      const response = await axiosInstance.post(`/auth/register`, userData);
+      const response = await axiosInstance.post(`api/v1/auth/register`, userData);
       return response.data;
     } catch (error) {
       console.error("Error registering:", error);
@@ -29,7 +31,7 @@ const AuthApi = {
       console.error("Error refreshing token:", error);
       throw error;
     }
-  },
+  }
 };
 
 export default AuthApi;

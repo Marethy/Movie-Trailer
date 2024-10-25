@@ -1,9 +1,10 @@
-import { axiosInstance, TokenManager } from "./apiClient";
+import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
 
 const MovieApi = {
   async getMovies() {
+    configureAxios();
     try {
-      const response = await axiosInstance.get(`/movie`);
+      const response = await axiosInstance.get(`/api/v1/movie`);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -15,8 +16,9 @@ const MovieApi = {
   },
 
   async getMovieById(id) {
+    configureAxios();
     try {
-      const response = await axiosInstance.get(`/movie/${id}`);
+      const response = await axiosInstance.get(`/api/v1/movie/${id}`);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -28,8 +30,9 @@ const MovieApi = {
   },
 
   async createMovie(movieData) {
+    configureAxios();
     try {
-      const response = await axiosInstance.post(`/movie`, movieData);
+      const response = await axiosInstance.post(`/api/v1/movie`, movieData);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -41,8 +44,9 @@ const MovieApi = {
   },
 
   async updateMovie(id, movieData) {
+    configureAxios();
     try {
-      const response = await axiosInstance.put(`/movie/${id}`, movieData);
+      const response = await axiosInstance.put(`/api/v1/movie/${id}`, movieData);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -54,8 +58,9 @@ const MovieApi = {
   },
 
   async deleteMovie(id) {
+    configureAxios();
     try {
-      await axiosInstance.delete(`/movie/${id}`);
+      await axiosInstance.delete(`/api/v1/movie/${id}`);
     } catch (error) {
       if (error.response && error.response.status === 401) {
         return await TokenManager.handleTokenRefresh(this.deleteMovie, id);
@@ -66,8 +71,9 @@ const MovieApi = {
   },
 
   async getMoviesByIds(ids) {
+    configureAxios();
     try {
-      const response = await axiosInstance.get(`/movie/ids`, { params: { ids } });
+      const response = await axiosInstance.get(`/api/v1/movie/ids`, { params: { ids } });
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -79,8 +85,9 @@ const MovieApi = {
   },
 
   async getMoviesByTheater(theaterId) {
+    configureAxios();
     try {
-      const response = await axiosInstance.get(`/movie/theater/${theaterId}`);
+      const response = await axiosInstance.get(`/api/v1/movie/theater/${theaterId}`);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -92,8 +99,9 @@ const MovieApi = {
   },
 
   async rateMovie(ratingData) {
+    configureAxios();
     try {
-      const response = await axiosInstance.put(`/movie/rating`, ratingData);
+      const response = await axiosInstance.put(`/api/v1/movie/rating`, ratingData);
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -105,8 +113,9 @@ const MovieApi = {
   },
 
   async searchMovies(searchText, pageNo = 0, pageSize = 10, sortBy = "id", sortDir = "asc") {
+    configureAxios();
     try {
-      const response = await axiosInstance.get(`/movie/search`, {
+      const response = await axiosInstance.get(`/api/v1/movie/search`, {
         params: { searchText, pageNo, pageSize, sortBy, sortDir },
       });
       return response.data;
@@ -117,7 +126,7 @@ const MovieApi = {
       console.error("Error searching movies:", error);
       throw error;
     }
-  },
+  }
 };
 
 export default MovieApi;

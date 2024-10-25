@@ -1,80 +1,73 @@
-// src/pages/RegisterPage.jsx
 import React, { useState } from 'react';
+import { Form, Input, Button, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import AuthApi from '../api/authApi';
 
 const RegisterPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your registration logic here
+  const onFinish = async (values) => {
+    setLoading(true);
+    try {
+      await AuthApi.register({
+        username: values.username,
+        password: values.password,
+      });
+      message.success('Registration successful');
+      navigate('/login'); // Redirect to login page after successful registration
+    } catch (error) {
+      console.error('Error registering:', error);
+      message.error('Failed to register');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="container mx-auto my-auto py-10">
-      <h1 className="text-3xl font-bold mb-6 text-center text-white">Register</h1>
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-gray-800 p-8 rounded-lg">
-        <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="email">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={handleEmailChange}
-            className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-lg focus:outline-none"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-            className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-lg focus:outline-none"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="confirmPassword">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-lg focus:outline-none"
-            required
-          />
-        </div>
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none"
-          >
+    <div className="register-container">
+      <h2>Register</h2>
+      <Form
+        name="register"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+      >
+        <Form.Item
+          name="username"
+          rules={[{ required: true, message: 'Please input your username!' }]}
+        >
+          <Input placeholder="Username" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password placeholder="Password" />
+        </Form.Item>
+        <Form.Item
+          name="confirmPassword"
+          dependencies={['password']}
+          hasFeedback
+          rules={[
+            { required: true, message: 'Please confirm your password!' },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('The two passwords do not match!'));
+              },
+            }),
+          ]}
+        >
+          <Input.Password placeholder="Confirm Password" />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" loading={loading}>
             Register
-          </button>
-        </div>
-      </form>
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
