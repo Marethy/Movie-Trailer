@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Form, Input, Spin, message } from 'antd';
+import { Button, Modal, Form, Input, Spin, message, InputNumber, List, Typography } from 'antd';
 import TheaterApi from '../../api/theaterApi';
+
+const { Text } = Typography;
 
 const TheaterManagement = () => {
   const [theaters, setTheaters] = useState([]);
@@ -12,10 +14,8 @@ const TheaterManagement = () => {
     const fetchTheaters = async () => {
       try {
         const theaterData = await TheaterApi.getTheaters();
-        console.log('Fetched theater data:', theaterData);
         setTheaters(theaterData);
       } catch (error) {
-        console.error('Error fetching theater data:', error);
         message.error('Failed to load theater data');
       } finally {
         setLoadingTheaters(false);
@@ -39,7 +39,6 @@ const TheaterManagement = () => {
       const theaterData = await TheaterApi.getTheaters();
       setTheaters(theaterData);
     } catch (error) {
-      console.error('Error creating theater:', error);
       message.error('Failed to create theater');
     }
   };
@@ -55,14 +54,13 @@ const TheaterManagement = () => {
       const theaterData = await TheaterApi.getTheaters();
       setTheaters(theaterData);
     } catch (error) {
-      console.error('Error deleting theater:', error);
       message.error('Failed to delete theater');
     }
   };
 
   return (
-    <div>
-      <Button type="primary" onClick={showModal}>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <Button type="primary" onClick={showModal} className="mb-6">
         Add Theater
       </Button>
       <Modal
@@ -78,23 +76,69 @@ const TheaterManagement = () => {
             rules={[{ required: true, message: 'Please input the theater name!' }]}
           >
             <Input />
-       
           </Form.Item>
+          <Form.List name="projectionRoomList">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map((field) => (
+                  <div key={field.key} className="flex items-center space-x-4">
+                    <Form.Item
+                      {...field}
+                      name={[field.name, 'number']}
+                      label="Room Number"
+                      rules={[{ required: true, message: 'Please input the room number!' }]}
+                    >
+                      <InputNumber min={1} placeholder="Room Number" className="w-full" />
+                    </Form.Item>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, 'seats']}
+                      label="Seats"
+                      rules={[{ required: true, message: 'Please input the number of seats!' }]}
+                    >
+                      <InputNumber min={1} placeholder="Seats" className="w-full" />
+                    </Form.Item>
+                    <Button type="link" onClick={() => remove(field.name)}>
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button type="dashed" onClick={() => add()} className="w-full">
+                    Add Room
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
         </Form>
       </Modal>
       {loadingTheaters ? (
         <Spin tip="Loading theaters..." />
       ) : (
-        <ul>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {theaters.map((theater) => (
-            <li key={theater.id}>
-              {theater.name}
-              <Button type="link" onClick={() => handleDelete(theater.id)}>
-                Delete
-              </Button>
-            </li>
+            <div key={theater.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex justify-between items-center mb-4">
+                <Text strong className="text-lg">{theater.name}</Text>
+                <Button type="link" danger onClick={() => handleDelete(theater.id)}>
+                  Delete
+                </Button>
+              </div>
+              <List
+                size="small"
+                bordered
+                dataSource={theater.projectionRoomList}
+                renderItem={(room) => (
+                  <List.Item className="py-2">
+                    Room {room.number}: <Text>{room.seats} seats</Text>
+                  </List.Item>
+                )}
+                className="rounded-md border-gray-200"
+              />
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
