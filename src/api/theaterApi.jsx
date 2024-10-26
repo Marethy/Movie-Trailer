@@ -1,5 +1,5 @@
 import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
-
+import {message} from "antd";
 const TheaterApi = {
   async createTheater(theaterData) {
     configureAxios();
@@ -33,6 +33,7 @@ const TheaterApi = {
     configureAxios();
     try {
       const response = await axiosInstance.put(`/api/v1/theater/${theaterId}`, theaterData);
+      message.success("Theater from api updated successfully");
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {

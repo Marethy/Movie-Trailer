@@ -11,17 +11,14 @@ const LoginPage = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      // Lưu username và password vào localStorage hoặc state
       localStorage.setItem('username', values.username);
       localStorage.setItem('password', values.password);
 
-      // Gọi hàm lấy access token với username và password
       const accessToken = await TokenManager.getAccessToken({
         username: values.username,
         password: values.password,
       });
 
-      // Sau khi nhận token, điều hướng tùy theo quyền user
       if (accessToken) {
         navigate('/admin'); // Redirect to admin if role is ADMIN
       } else {
@@ -53,7 +50,11 @@ const LoginPage = () => {
           name="password"
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
-          <Input.Password placeholder="Password" />
+          <Input.Password placeholder="Password" 
+           id="login_password" 
+           aria-required="true" 
+           autoComplete="current-password"  // Add autocomplete attribute
+           className="ant-input "/>
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>

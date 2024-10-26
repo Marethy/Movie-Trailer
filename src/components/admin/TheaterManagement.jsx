@@ -1,105 +1,97 @@
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Popconfirm,
-  Form,
-  Input,
-  Spin,
-  message,
-  InputNumber,
-  List,
-  Typography,
-  Modal,
-} from "antd";
-import TheaterApi from "../../api/theaterApi";
-
+import React, { useState } from 'react';
+import { Button, Popconfirm, Form, Input, Spin, message, InputNumber, List, Typography, Modal } from 'antd';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import TheaterApi from '../../api/theaterApi';
+import ProjectionRoom from './ProjectionRoom'; // Import ProjectionRoom component
 const { Text } = Typography;
 
 const TheaterManagement = () => {
-  const [theaters, setTheaters] = useState([]);
-  const [loadingTheaters, setLoadingTheaters] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false); // New state for edit mode
-  const [currentTheaterId, setCurrentTheaterId] = useState(null); // New state for the current theater ID
+  const [selectedTheater, setSelectedTheater] = useState(null);
   const [form] = Form.useForm();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchTheaters = async () => {
-      try {
-        const theaterData = await TheaterApi.getTheaters();
-        setTheaters(theaterData);
-      } catch (error) {
-        message.error("Failed to load theater data");
-      } finally {
-        setLoadingTheaters(false);
-      }
-    };
+  const { data: theaters, isLoading: loadingTheaters } = useQuery({
+    queryKey: ['theaters'], // Updated to object form
+    queryFn: TheaterApi.getTheaters,
+  });
 
-    fetchTheaters();
-  }, []);
+  const createTheaterMutation = useMutation({
+    mutationFn: TheaterApi.createTheater,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['theaters']);
+      message.success('Theater created successfully');
+    },
+    onError: () => {
+      message.error('Failed to create theater');
+    },
+  });
 
-  const showModal = () => {
+  const updateTheaterMutation = useMutation({
+    mutationFn: TheaterApi.updateTheater,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['theaters']);
+      message.success('Theater updated successfully');
+    },
+    onError: () => {
+      message.error('Failed to update theater');
+    },
+  });
+
+  const deleteTheaterMutation = useMutation({
+    mutationFn: TheaterApi.deleteTheater,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['theaters']);
+      message.success('Theater deleted successfully');
+    },
+    onError: () => {
+      message.error('Failed to delete theater');
+    },
+  });
+
+  const showModal = (theater = null) => {
+    setSelectedTheater(theater);
+    if (theater) {
+      form.setFieldsValue(theater);
+    } else {
+      form.resetFields();
+    }
     setIsModalVisible(true);
-    form.resetFields(); // Reset the form fields
-    setIsEditMode(false); // Set to add mode
-  };
-
-  const showEditModal = (theater) => {
-    setCurrentTheaterId(theater.id);
-    form.setFieldsValue({
-      // Set current theater data in the form
-      name: theater.name,
-      projectionRoomList: theater.projectionRoomList,
-    });
-    setIsModalVisible(true);
-    setIsEditMode(true); // Set to edit mode
   };
 
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      if (isEditMode) {
-        // Update the theater if in edit mode
-        await TheaterApi.updateTheater(currentTheaterId, values);
-        message.success("Theater updated successfully");
+      if (selectedTheater) {
+        updateTheaterMutation.mutate({ id: selectedTheater.id, ...values });
       } else {
-        // Create a new theater if in add mode
-        await TheaterApi.createTheater(values);
-        message.success("Theater created successfully");
+        createTheaterMutation.mutate(values);
       }
       setIsModalVisible(false);
       form.resetFields();
-      const theaterData = await TheaterApi.getTheaters();
-      setTheaters(theaterData);
+      setSelectedTheater(null);
     } catch (error) {
-      message.error(
-        isEditMode ? "Failed to update theater" : "Failed to create theater"
-      );
+      message.error('Failed to save theater');
     }
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setSelectedTheater(null);
+    form.resetFields();
   };
 
-  const handleDelete = async (theaterId) => {
-    try {
-      await TheaterApi.deleteTheater(theaterId);
-      message.success("Theater deleted successfully");
-      const theaterData = await TheaterApi.getTheaters();
-      setTheaters(theaterData);
-    } catch (error) {
-      message.error("Failed to delete theater");
-    }
+  const handleDelete = (theaterId) => {
+    deleteTheaterMutation.mutate(theaterId);
   };
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <Button type="primary" onClick={showModal} className="mb-6">
+      <Button type="primary" onClick={() => showModal()} className="mb-6">
         Add Theater
       </Button>
       <Modal
-        title={isEditMode ? "Edit Theater" : "Add Theater"}
+        title={selectedTheater ? 'Update Theater' : 'Add Theater'}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -108,9 +100,14 @@ const TheaterManagement = () => {
           <Form.Item
             name="name"
             label="Name"
-            rules={[
-              { required: true, message: "Please input the theater name!" },
-            ]}
+            rules={[{ required: true, message: 'Please input the theater name!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="location"
+            label="Location"
+            rules={[{ required: true, message: 'Please input the theater location!' }]}
           >
             <Input />
           </Form.Item>
@@ -121,37 +118,19 @@ const TheaterManagement = () => {
                   <div key={field.key} className="flex items-center space-x-4">
                     <Form.Item
                       {...field}
-                      name={[field.name, "number"]}
+                      name={[field.name, 'number']}
                       label="Room Number"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input the room number!",
-                        },
-                      ]}
+                      rules={[{ required: true, message: 'Please input the room number!' }]}
                     >
-                      <InputNumber
-                        min={1}
-                        placeholder="Room Number"
-                        className="w-full"
-                      />
+                      <InputNumber min={1} placeholder="Room Number" className="w-full" />
                     </Form.Item>
                     <Form.Item
                       {...field}
-                      name={[field.name, "seats"]}
+                      name={[field.name, 'seats']}
                       label="Seats"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input the number of seats!",
-                        },
-                      ]}
+                      rules={[{ required: true, message: 'Please input the number of seats!' }]}
                     >
-                      <InputNumber
-                        min={1}
-                        placeholder="Seats"
-                        className="w-full"
-                      />
+                      <InputNumber min={1} placeholder="Seats" className="w-full" />
                     </Form.Item>
                     <Button type="link" onClick={() => remove(field.name)}>
                       Remove
@@ -159,11 +138,7 @@ const TheaterManagement = () => {
                   </div>
                 ))}
                 <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    className="w-full"
-                  >
+                  <Button type="dashed" onClick={() => add()} className="w-full">
                     Add Room
                   </Button>
                 </Form.Item>
@@ -177,17 +152,12 @@ const TheaterManagement = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {theaters.map((theater) => (
-            <div
-              key={theater.id}
-              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="flex justify-between items-center my-6 ">
-                <Text strong className="text-lg">
-                  {theater.name}
-                </Text>
-                <div className="flex gap-4">
-                  <Button type="primary" onClick={() => showEditModal(theater)}>
-                    Edit
+            <div key={theater.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex justify-between items-center mb-4">
+                <Text strong className="text-lg">{theater.name}</Text>
+                <div>
+                  <Button type="primary" onClick={() => showModal(theater)} style={{ marginRight: '10px' }}>
+                    Update
                   </Button>
                   <Popconfirm
                     title="Are you sure to delete this theater?"
