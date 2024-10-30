@@ -36,7 +36,7 @@ const Header = ({ setSearchData }) => {
     <div className="p-4 flex justify-between relative w-full  bg-black">
       <div className="flex items-center gap-8">
         <nav className="flex items-center space-x-5 text-white text-xl">
-          <Link to="/" className="text-4xl uppercase text-red-700 font-bold">
+          <Link to="/" className="text-4xl uppercase text-red-800 font-bold">
             Movie
           </Link>
           <Link to="/" className="hidden md:block hover:text-red-700">
