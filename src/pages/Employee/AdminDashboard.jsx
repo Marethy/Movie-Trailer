@@ -72,7 +72,7 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         await TokenManager.getAccessToken();
-        const userData = await UserApi.getUser(1);
+        const userData = await UserApi.getUser();
         setUser(userData);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -102,7 +102,7 @@ const AdminDashboard = () => {
 
   const menuItems = [
     { key: "1", icon: <HomeOutlined />, label: "Home" },
-    { key: "2", icon: <UserOutlined />, label: "Employee" },
+    { key: "2", icon: <UserOutlined />, label: "User" },
     { key: "3", icon: <VideoCameraOutlined />, label: "Movies" },
     { key: "4", icon: <ShoppingOutlined />, label: "Products" },
     { key: "5", icon: <ShopOutlined />, label: "Theaters" },
@@ -136,7 +136,7 @@ const AdminDashboard = () => {
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-            <Breadcrumb.Item>{selectedMenuItem === "3" ? "Movies" : selectedMenuItem === "2" ? "Employee" : "Home"}</Breadcrumb.Item>
+            <Breadcrumb.Item>{selectedMenuItem === "3" ? "Movies" : selectedMenuItem === "2" ? "User" : "Home"}</Breadcrumb.Item>
           </Breadcrumb>
 
           <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>

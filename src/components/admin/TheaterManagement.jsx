@@ -104,13 +104,7 @@ const TheaterManagement = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="location"
-            label="Location"
-            rules={[{ required: true, message: 'Please input the theater location!' }]}
-          >
-            <Input />
-          </Form.Item>
+    
           <Form.List name="projectionRoomList">
             {(fields, { add, remove }) => (
               <>

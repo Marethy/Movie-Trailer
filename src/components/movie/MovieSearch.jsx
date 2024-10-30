@@ -41,7 +41,7 @@ const MovieSearch = ({ title, data }) => {
 };
 
 MovieSearch.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired, 
   data: PropTypes.array.isRequired,
 };
 
