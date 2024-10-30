@@ -21,44 +21,11 @@ import UserDetail from "../../components/admin/UserDetail";
 import TheaterManagement from "../../components/admin/TheaterManagement";
 import { TokenManager } from "../../api/apiClient";
 import {useNavigate} from "react-router-dom";
+import UserProfileButton from "../../components/UserProfileButton";
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const { Search } = Input;
 
-const UserProfileButton = () => {
-  const navigate = useNavigate();
-  const username = localStorage.getItem("username") || "User";
-
-  const handleMenuClick = ({ key }) => {
-    if (key === "profile") {
-      message.info("Redirecting to profile...");
-    } else if (key === "logout") {
-      localStorage.removeItem("username");
-      message.success("Logged out successfully.");
-      navigate("/login");
-    }
-  };
-
-  const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="profile" icon={<UserOutlined />}>
-        Your Profile
-      </Menu.Item>
-      <Menu.Item key="logout" icon={<LogoutOutlined />}>
-        Log Out
-      </Menu.Item>
-    </Menu>
-  );
-
-  return (
-    <Dropdown overlay={menu} trigger={['click']}>
-      <div style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
-        <UserOutlined style={{ color: "white", fontSize: "24px", paddingRight: "10px" }} />
-        <p style={{ color: "white", margin: "0 10px" }}>Hello, {username}</p>
-      </div>
-    </Dropdown>
-  );
-};
 
 const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);

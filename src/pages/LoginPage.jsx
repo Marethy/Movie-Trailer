@@ -38,9 +38,9 @@ const LoginPage = () => {
         username: values.username,
         password: values.password,
       });
-
-      if (accessToken) {
-        const userRole = getRoleFromToken(accessToken);
+      localStorage.setItem('username', values.username);
+      localStorage.setItem('password', values.password);      if (accessToken) {
+      const userRole = getRoleFromToken(accessToken);
 
         if (userRole === "Admin") {
           navigate("/admin"); // Redirect to admin dashboard if role is ADMIN
@@ -120,12 +120,13 @@ const LoginPage = () => {
                 Forgot your password?
               </a>
             </Form.Item>
-            <Form.Item className="">
+            <Form.Item  >
               <Button
                 type="primary"
+                style={{ backgroundColor: "red", color: "white" }}
                 htmlType="submit"
                 loading={loading}
-                className="w-full bg-red-700 hover:bg-red-800"
+                className="w-full bg-red-700 hover:text-gray-900"
               >
                 Log in
               </Button>
