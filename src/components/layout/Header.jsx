@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
 
 const Header = ({ setSearchData }) => {
   const [search, setSearch] = useState("");
@@ -47,10 +46,10 @@ const Header = ({ setSearchData }) => {
           placeholder="Search"
           className="border border-gray-300 p-2 text-black"
           value={search}
-          onChange={(e) => setSearch(e.target.value)} // Chỉ cập nhật giá trị tìm kiếm
+          onChange={(e) => setSearch(e.target.value)}
         />
         <button
-          onClick={handleSearch} // Gọi hàm tìm kiếm khi nhấn nút
+          onClick={handleSearch}
           className="bg-red-700 text-white px-3 py-2 rounded-lg"
         >
           Search
