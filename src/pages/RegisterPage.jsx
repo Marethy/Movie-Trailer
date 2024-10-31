@@ -84,7 +84,7 @@ const RegisterPage = () => {
               htmlType="submit"
               loading={loading}
               style={{ backgroundColor: "#b91c1c", borderColor: "#7f1d1d" }}
-              className="w-full hover:bg-red-900"
+              className="w-full hover:bg-red-900 font-bold  text-white"
             >
               Register
             </Button>
