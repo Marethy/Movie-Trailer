@@ -55,8 +55,8 @@ const ShowtimeManagement = () => {
     if (showtime) {
       form.setFieldsValue({
         ...showtime,
-        date: moment(showtime.date),
-        time: moment(showtime.time, 'HH:mm'),
+        date: moment(showtime.start_time.split(' ')[0]),
+        time: moment(showtime.start_time.split(' ')[1], 'HH:mm'),
       });
     } else {
       form.resetFields();
@@ -68,12 +68,13 @@ const ShowtimeManagement = () => {
     try {
       const values = await form.validateFields();
       const formattedValues = {
-        ...values,
-        date: values.date.format('YYYY-MM-DD'),
-        time: values.time.format('HH:mm'),
+        start_time: `${values.date.format('YYYY-MM-DD')} ${values.time.format('HH:mm:ss')}`,
+        movie_id: values.movieId,
+        projection_room_id: values.roomId,
+        theater_id: values.theaterId,
       };
       if (selectedShowtime) {
-        updateShowtimeMutation.mutate({ id: selectedShowtime.id, ...formattedValues });
+        updateShowtimeMutation.mutate({ id: selectedShowtime.showtime_id, ...formattedValues });
       } else {
         createShowtimeMutation.mutate(formattedValues);
       }
@@ -122,6 +123,13 @@ const ShowtimeManagement = () => {
             <Input />
           </Form.Item>
           <Form.Item
+            name="theaterId"
+            label="Theater ID"
+            rules={[{ required: true, message: 'Please input the theater ID!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             name="date"
             label="Date"
             rules={[{ required: true, message: 'Please select the date!' }]}
@@ -142,16 +150,16 @@ const ShowtimeManagement = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {showtimes.map((showtime) => (
-            <div key={showtime.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+            <div key={showtime.showtime_id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex justify-between items-center mb-4">
-                <Text strong className="text-lg">Movie ID: {showtime.movieId}</Text>
+                <Text strong className="text-lg">Movie ID: {showtime.movie_id}</Text>
                 <div>
                   <Button type="primary" onClick={() => showModal(showtime)} style={{ marginRight: '10px' }}>
                     Update
                   </Button>
                   <Popconfirm
                     title="Are you sure to delete this showtime?"
-                    onConfirm={() => handleDelete(showtime.id)}
+                    onConfirm={() => handleDelete(showtime.showtime_id)}
                     okText="Yes"
                     cancelText="No"
                   >
@@ -163,9 +171,9 @@ const ShowtimeManagement = () => {
                 size="small"
                 bordered
                 dataSource={[
-                  `Room ID: ${showtime.roomId}`,
-                  `Date: ${showtime.date}`,
-                  `Time: ${showtime.time}`,
+                  `Room ID: ${showtime.projection_room_id}`,
+                  `Theater ID: ${showtime.theater_id}`,
+                  `Start Time: ${moment(showtime.start_time).format('YYYY-MM-DD HH:mm')}`,
                 ]}
                 renderItem={(item) => (
                   <List.Item className="py-2">

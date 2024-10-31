@@ -2,17 +2,12 @@ import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
 
 const MovieApi = {
   async getMovies() {
-    configureAxios();
-    try {
-      const response = await axiosInstance.get(`/api/v1/movie`);
+     {
+      const response = await axiosInstance.get(`/api/v1/movie`,{
+        headers: { Authorization: undefined }, // Remove Authorization header
+      });
       return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.getMovies);
-      }
-      console.error("Error fetching movies:", error);
-      throw error;
-    }
+    } 
   },
 
   async getMovieById(id) {
