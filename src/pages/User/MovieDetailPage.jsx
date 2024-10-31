@@ -2,17 +2,18 @@ import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useFetchMovies from "../../hooks/useFetchMovies";
-import { PlayIcon, VideoCameraIcon, StarIcon } from "@heroicons/react/24/solid"; 
+import { PlayIcon, VideoCameraIcon, StarIcon } from "@heroicons/react/24/solid";
 import { MovieContext } from "../../context/MovieDetailContext";
 
 function MovieDetailPage() {
   const { handleVideoTrailer } = useContext(MovieContext);
   const navigate = useNavigate();
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState(null);
   const { topRatedMovies } = useFetchMovies();
 
+  // Fetch movie details when component mounts or ID changes
   useEffect(() => {
     const fetchMovie = async () => {
       try {
@@ -36,12 +37,13 @@ function MovieDetailPage() {
     fetchMovie();
   }, [id]);
 
+  // Use useMemo to prevent re-rendering the star icons
   const renderStars = useMemo(() => (rating) => {
     const starCount = Math.round(rating / 2);
     return Array.from({ length: 5 }, (_, i) => (
       <StarIcon
-        key={i} 
-        className={`${i < starCount ? "text-yellow-400" : "text-gray-400"} h-4 w-4`} 
+        key={i}
+        className={`${i < starCount ? "text-yellow-400" : "text-gray-400"} h-4 w-4`}
       />
     ));
   }, []);
@@ -57,26 +59,33 @@ function MovieDetailPage() {
   const { title, poster_path, vote_average, genres, runtime, release_date, overview } = movie;
 
   return (
-    <div className="container mx-auto my-20 px-12">
-      <div className="flex flex-col md:flex-row md:gap-8 mx-auto">
-        <div className="md:w-1/3 mb-6 md:mb-0">
+    <div className="container mx-auto my-20">
+      <div className="flex flex-col md:flex-row gap-8 mx-auto">
+        {/* Movie Poster */}
+        <div className="flex-shrink-0">
           <img
             src={`https://image.tmdb.org/t/p/w200/${poster_path}`}
             alt={title}
-            className="rounded-lg shadow-lg"
+            className="rounded-lg shadow-lg hover:scale-110 transition-transform duration-500 ease-in-out cursor-pointer"
           />
         </div>
 
-        <div className="md:w-2/3 text-white">
+        {/* Movie Details */}
+        <div className="md:flex-1 text-white">
           <h2 className="text-3xl font-bold mb-4">{title}</h2>
-          <div className="flex items-center mb-4">
-            {renderStars(vote_average)}
-          </div>
-          <p className="text-lg mb-2 "><strong>Genre:</strong> {genres.map(genre => genre.name).join(", ")}</p>
-          <p className="text-lg mb-2"><strong>Duration:</strong> {Math.floor(runtime / 60)}h {runtime % 60}m</p>
-          <p className="text-lg mb-4"><strong>Release Year:</strong> {new Date(release_date).getFullYear()}</p>
+          <div className="flex items-center mb-4">{renderStars(vote_average)}</div>
+          <p className="text-lg mb-2">
+            <strong>Genre:</strong> {genres.map((genre) => genre.name).join(", ")}
+          </p>
+          <p className="text-lg mb-2">
+            <strong>Duration:</strong> {Math.floor(runtime / 60)}h {runtime % 60}m
+          </p>
+          <p className="text-lg mb-4">
+            <strong>Release Year:</strong> {new Date(release_date).getFullYear()}
+          </p>
           <p className="mb-6">{overview}</p>
 
+          {/* Action Buttons */}
           <div className="flex gap-4">
             <button
               className="flex items-center bg-gray-800 text-white py-2 px-4 rounded-lg shadow hover:bg-gray-700"
@@ -91,10 +100,11 @@ function MovieDetailPage() {
         </div>
       </div>
 
+      {/* Recommended Movies */}
       <div className="mt-10">
         <h3 className="text-2xl font-bold mb-4">Recommended Movies</h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {topRatedMovies.slice(0, 5).map(movie => (
+          {topRatedMovies.slice(0, 5).map((movie) => (
             <div key={movie.id} className="rounded-lg overflow-hidden shadow-lg">
               <img
                 src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}

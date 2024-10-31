@@ -22,6 +22,7 @@
     "jose": "^5.9.6",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
+    "moment": "^2.30.1",
     "movie-app": "file:",
     "prop-types": "^15.8.1",
     "qs": "^6.13.0",

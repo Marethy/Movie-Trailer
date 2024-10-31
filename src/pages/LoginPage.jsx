@@ -76,8 +76,8 @@ const LoginPage = () => {
             Login for Exclusive Access
           </h2>
           <p className="text-lg mt-6 ">
-            Immerse yourself in a hassle-free login journey with our intuitively
-            designed login form. Effortlessly access your account.
+          Seamlessly access your Betflix account with our streamlined, user-friendly login experience. 
+          Log in effortlessly and dive back into the entertainment.
           </p>
         </div>
 
@@ -126,9 +126,9 @@ const LoginPage = () => {
                 style={{ backgroundColor: "red", color: "white" }}
                 htmlType="submit"
                 loading={loading}
-                className="w-full bg-red-700 hover:text-gray-900"
+                className="w-full bg-red-700 hover:text-gray-900 font-bold"
               >
-                Log in
+                Log in now
               </Button>
             </Form.Item>
 

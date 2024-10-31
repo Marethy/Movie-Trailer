@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.custom-placeholder ::placeholder {
+    color: black !important; /* Overrides the default placeholder color */
+    opacity: 1; /* Ensures the color is fully applied */
+  }
+  
+  
