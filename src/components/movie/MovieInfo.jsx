@@ -5,19 +5,17 @@ const MovieInfo = ({ movie }) => {
   if (!movie) return <div>Loading...</div>;
 
   return (
-    <div className="md:w-2/3 my-10 px-10 max-w-full ">
-      <h1 className="text-2xl font-bold mb-4">{movie.title}</h1>
-
-      <p className="text-gray-300 mb-4"><strong>Overview:</strong> {movie.overview}</p>
-      <p className="text-gray-700 mb-2"><strong>Release Date:</strong> {movie.release_date}</p>
-      <p className="text-gray-700 mb-2"><strong>Duration:</strong> {movie.runtime} minutes</p>
-      <p className="text-gray-700 mb-2"><strong>Genres:</strong> {movie.genres.map(genre => genre.name).join(', ')}</p>
-      <p className="text-gray-700 mb-2"><strong>Rating:</strong> {movie.vote_average} / 10</p>
+    <div className="flex flex-col text-gray-200 space-y-4">
+      <h1 className="text-4xl font-extrabold">{movie.title}</h1>
+      <p className="text-gray-400"><strong>Overview:</strong> {movie.overview}</p>
+      <p><strong>Release Date:</strong> {movie.release_date}</p>
+      <p><strong>Duration:</strong> {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m</p>
+      <p><strong>Genres:</strong> {movie.genres.map((genre) => genre.name).join(', ')}</p>
+      <p><strong>Rating:</strong> {movie.vote_average} / 10</p>
     </div>
   );
 };
 
-// Thêm PropTypes validation
 MovieInfo.propTypes = {
   movie: PropTypes.shape({
     title: PropTypes.string.isRequired,
@@ -28,6 +26,7 @@ MovieInfo.propTypes = {
       name: PropTypes.string,
     })),
     vote_average: PropTypes.number,
+    poster_path: PropTypes.any,
   }).isRequired,
 };
 

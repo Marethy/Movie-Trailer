@@ -94,7 +94,6 @@ const CinemaMovie = () => {
             <Button onClick={() => handleModalClose()} type="primary">
               Close
             </Button>
-            <ProjectionRoom movieId={selectedMovie.id} /> {/* Pass movie ID to ProjectionRoom */}
           </div>
         )}
       </Modal>

@@ -63,7 +63,7 @@ const Header = ({ setSearchData }) => {
             Home
           </Link>
           <Link
-            to="/cinema/contact"
+            to="/user/contact"
             className="hidden md:block hover:text-red-700"
           >
             Contact
