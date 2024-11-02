@@ -3,7 +3,7 @@ import Banner from "../../components/Banner";
 import MovieList from "../../components/movie/MovieList";
 import MovieSearch from "../../components/movie/MovieSearch";
 import useFetchMovies from "../../hooks/useFetchMovies";
-import CinemaMovie from "../../components/movie/CinemaMovie";
+import CinemaMovieList from "../../components/movie/CinemaMovieList";
 const HomePage = ({ searchData }) => {
   const { trendingMovies, topRatedMovies, isLoading } = useFetchMovies();
 
@@ -17,13 +17,14 @@ const HomePage = ({ searchData }) => {
           <MovieSearch title="Kết quả tìm kiếm" data={searchData} />
         ) : (
           <>
-            <h1 className=" text-red-700 text-5xl text-center  font-[arial]">
-              ĐẶT VÉ PHIM
+          
+            <h1 className=" text-red-700 text-3xl text-center font-bold font-[arial]">
+              Đặt vé phim
             </h1>
-            <CinemaMovie />
-            <h1 className="text-red-700 text-5xl text-center">
+            <CinemaMovieList />
+            <h1 className="text-red-700 text-3xl text-center font-bold font-[arial]">
               {" "}
-              XEM TRỰC TIẾP TRONG KHO PHIM
+              Xem trực tiếp trong kho phim
             </h1>
 
             <MovieList

@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
-import { Button, Popconfirm, Form, Input, Spin, message, InputNumber, List, Typography, Modal } from 'antd';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import TheaterApi from '../../api/theaterApi';
-import ProjectionRoom from './ProjectionRoom'; // Import ProjectionRoom component
+import React, { useState } from "react";
+import {
+  Button,
+  Popconfirm,
+  Form,
+  Input,
+  Spin,
+  message,
+  InputNumber,
+  List,
+  Typography,
+  Modal,
+} from "antd";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import TheaterApi from "../../api/theaterApi";
+import ProjectionRoom from "./ProjectionRoom"; // Import ProjectionRoom component
 const { Text } = Typography;
 
 const TheaterManagement = () => {
@@ -12,40 +23,40 @@ const TheaterManagement = () => {
   const queryClient = useQueryClient();
 
   const { data: theaters, isLoading: loadingTheaters } = useQuery({
-    queryKey: ['theaters'], // Updated to object form
+    queryKey: ["theaters"], // Updated to object form
     queryFn: TheaterApi.getTheaters,
   });
 
   const createTheaterMutation = useMutation({
     mutationFn: TheaterApi.createTheater,
     onSuccess: () => {
-      queryClient.invalidateQueries(['theaters']);
-      message.success('Theater created successfully');
+      queryClient.invalidateQueries(["theaters"]);
+      message.success("Theater created successfully");
     },
     onError: () => {
-      message.error('Failed to create theater');
+      message.error("Failed to create theater");
     },
   });
 
   const updateTheaterMutation = useMutation({
     mutationFn: TheaterApi.updateTheater,
     onSuccess: () => {
-      queryClient.invalidateQueries(['theaters']);
-      message.success('Theater updated successfully');
+      queryClient.invalidateQueries(["theaters"]);
+      message.success("Theater updated successfully");
     },
     onError: () => {
-      message.error('Failed to update theater');
+      message.error("Failed to update theater");
     },
   });
 
   const deleteTheaterMutation = useMutation({
     mutationFn: TheaterApi.deleteTheater,
     onSuccess: () => {
-      queryClient.invalidateQueries(['theaters']);
-      message.success('Theater deleted successfully');
+      queryClient.invalidateQueries(["theaters"]);
+      message.success("Theater deleted successfully");
     },
     onError: () => {
-      message.error('Failed to delete theater');
+      message.error("Failed to delete theater");
     },
   });
 
@@ -71,7 +82,7 @@ const TheaterManagement = () => {
       form.resetFields();
       setSelectedTheater(null);
     } catch (error) {
-      message.error('Failed to save theater');
+      message.error("Failed to save theater");
     }
   };
 
@@ -86,12 +97,12 @@ const TheaterManagement = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className=" bg-gray-100 min-h-screen">
       <Button type="primary" onClick={() => showModal()} className="mb-6">
         Add Theater
       </Button>
       <Modal
-        title={selectedTheater ? 'Update Theater' : 'Add Theater'}
+        title={selectedTheater ? "Update Theater" : "Add Theater"}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -100,11 +111,13 @@ const TheaterManagement = () => {
           <Form.Item
             name="name"
             label="Name"
-            rules={[{ required: true, message: 'Please input the theater name!' }]}
+            rules={[
+              { required: true, message: "Please input the theater name!" },
+            ]}
           >
             <Input />
           </Form.Item>
-    
+
           <Form.List name="projectionRoomList">
             {(fields, { add, remove }) => (
               <>
@@ -112,19 +125,37 @@ const TheaterManagement = () => {
                   <div key={field.key} className="flex items-center space-x-4">
                     <Form.Item
                       {...field}
-                      name={[field.name, 'number']}
+                      name={[field.name, "number"]}
                       label="Room Number"
-                      rules={[{ required: true, message: 'Please input the room number!' }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input the room number!",
+                        },
+                      ]}
                     >
-                      <InputNumber min={1} placeholder="Room Number" className="w-full" />
+                      <InputNumber
+                        min={1}
+                        placeholder="Room Number"
+                        className="w-full"
+                      />
                     </Form.Item>
                     <Form.Item
                       {...field}
-                      name={[field.name, 'seats']}
+                      name={[field.name, "seats"]}
                       label="Seats"
-                      rules={[{ required: true, message: 'Please input the number of seats!' }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input the number of seats!",
+                        },
+                      ]}
                     >
-                      <InputNumber min={1} placeholder="Seats" className="w-full" />
+                      <InputNumber
+                        min={1}
+                        placeholder="Seats"
+                        className="w-full"
+                      />
                     </Form.Item>
                     <Button type="link" onClick={() => remove(field.name)}>
                       Remove
@@ -132,7 +163,11 @@ const TheaterManagement = () => {
                   </div>
                 ))}
                 <Form.Item>
-                  <Button type="dashed" onClick={() => add()} className="w-full">
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    className="w-full"
+                  >
                     Add Room
                   </Button>
                 </Form.Item>
@@ -144,13 +179,22 @@ const TheaterManagement = () => {
       {loadingTheaters ? (
         <Spin tip="Loading theaters..." />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1  md:grid-cols-3 gap-10">
           {theaters.map((theater) => (
-            <div key={theater.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex justify-between items-center mb-4">
-                <Text strong className="text-lg">{theater.name}</Text>
+            <div
+              key={theater.id}
+              className="bg-white p-4  md:p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <div className="grid grid-cols-1 justify-between  mb-6">
+                <Text strong className="text-lg">
+                  {theater.name}
+                </Text>
                 <div>
-                  <Button type="primary" onClick={() => showModal(theater)} style={{ marginRight: '10px' }}>
+                  <Button
+                    type="primary"
+                    onClick={() => showModal(theater)}
+                    style={{ marginRight: "10px" }}
+                  >
                     Update
                   </Button>
                   <Popconfirm

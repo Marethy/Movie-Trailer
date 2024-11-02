@@ -53,11 +53,11 @@ const Header = ({ setSearchData }) => {
   const isLoggedIn = Boolean(localStorage.getItem("username")); // Check if user is logged in
 
   return (
-    <div className="p-4 flex justify-between relative w-full bg-black">
+    <div className="z-50 fixed bg-opacity-40 p-4 flex justify-between  w-full bg-black   ">
       <div className="flex items-center gap-8">
         <nav className="flex items-center space-x-5 text-white text-xl">
-          <Link to="/" className="text-4xl uppercase text-red-700 font-bold">
-            Movie
+          <Link to="/" className="text-4xl  text-red-700 font-bold">
+            Meet
           </Link>
           <Link to="/" className="hidden md:block hover:text-red-700">
             Home

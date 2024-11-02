@@ -70,7 +70,7 @@ const LoginPage = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="   grid md:grid-cols-2 bg-black bg-opacity-40 items-center gap-10 max-w-6xl w-full">
+      <div className="   grid md  :grid-cols-2 bg-black bg-opacity-40 items-center gap-10 max-w-6xl w-full">
         <div className="hidden md:block text-white">
           <h2 className="lg:text-5xl text-4xl font-extrabold lg:leading-[55px]">
             Login for Exclusive Access
@@ -81,7 +81,7 @@ const LoginPage = () => {
           </p>
         </div>
 
-        <div className=" max-w-md md:ml-auto w-full  p-8 rounded shadow-md text-white ">
+        <div className=" max-w-md md:ml-auto w-full  p-8 rounded shadow-md text-white items-center ">
           <h3 className=" text-3xl lg:text-5xl font-extrabold mb-8 text-center">
             Log in
           </h3>

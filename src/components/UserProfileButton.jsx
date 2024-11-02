@@ -32,9 +32,10 @@ const UserProfileButton = () => {
 
   return (
     <Dropdown overlay={menu} trigger={['click']}>
-      <div style={{ display: "flex", alignItems: "center", cursor: "pointer", backgroundColor: "black", color: "white" }}>
+      <div style={{ display: "flex", alignItems: "center", cursor: "pointer", color: "white" }}>
+      <p style={{ margin: "0 10px", color: "white" }}>Hello, {username}</p>
+
         <UserOutlined style={{ fontSize: "24px", paddingRight: "10px", color: "white" }} />
-        <p style={{ margin: "0 10px", color: "white" }}>Hello, {username}</p>
       </div>
     </Dropdown>
   );

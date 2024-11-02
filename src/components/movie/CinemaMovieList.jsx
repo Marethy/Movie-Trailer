@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Modal, Typography, List, Spin } from 'antd';
+import { Button, Modal, Typography, Spin } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import MovieApi from '../../api/movieApi';
-import ProjectionRoom from '../../components/admin/ProjectionRoom'; // Import ProjectionRoom component
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
@@ -27,7 +26,7 @@ const responsive = {
   },
 };
 
-const CinemaMovie = () => {
+const CinemaMovieList = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
 
@@ -51,21 +50,21 @@ const CinemaMovie = () => {
   }
 
   return (
-    <div className="my-10 px-10 max-w-full">
-      <h2 className="text-xl uppercase mb-4">Phim Đang Chiếu</h2>
+    <div className="my-10 px-2 md:px-10 max-w-full">
+      <h2 className="text-xl mb-4">Phim đang chiếu</h2>
       <Carousel responsive={responsive} draggable={false}>
         {movies?.content.map((movie) => (
           <div
             key={movie.id}
-            className="bg-cover bg-no-repeat bg-center w-[200px] h-[300px] relative hover:scale-110 transition-transform duration-500 ease-in-out cursor-pointer"
+            className="w-auto h-[200px] rounded-md md:w-auto md:h-[300px] bg-cover bg-no-repeat bg-center relative hover:scale-110 transition-transform duration-500 ease-in-out cursor-pointer m-1"
             style={{
               backgroundImage: `url(${movie.urlImage})`,
             }}
             onClick={() => showModal(movie)}
           >
-            <div className="bg-black w-full h-full opacity-40 absolute top-0 left-0 z-0" />
+            <div className="hidden md:block bg-black w-full h-full opacity-40 absolute top-0 left-0 z-0" />
             <div className="relative p-4 flex flex-col items-center justify-end h-full">
-              <h3 className="text-md uppercase">
+              <h3 className="text-md uppercase text-white">
                 {movie.name || movie.title || movie.original_title}
               </h3>
             </div>
@@ -101,4 +100,4 @@ const CinemaMovie = () => {
   );
 };
 
-export default CinemaMovie;
+export default CinemaMovieList;

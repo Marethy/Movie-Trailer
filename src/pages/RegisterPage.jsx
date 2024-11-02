@@ -29,7 +29,7 @@ const RegisterPage = () => {
 
   return (
     <div
-      className="font-[netflix-serif] min-h-screen flex flex-col items-center justify-center py-6 px-4"
+      className="font-[netflix-serif] min-h-screen  flex flex-col items-center justify-center py-6 px-4"
       style={{
         backgroundImage: `url(${registerBackground})`,
         backgroundSize: "cover",

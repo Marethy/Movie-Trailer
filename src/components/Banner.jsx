@@ -59,7 +59,7 @@ const Banner = () => {
                   <img key={index} src={rating} alt="rating" className="w-8 h-8" />
                 ))}
               </div>
-              <p className="text-white">{description}</p>
+              <p className="hidden md:block text-white">{description}</p>
             </div>
             <div className="flex items-center space-x-5">
               <button className="py-2 px-3 bg-black text-white font-bold rounded-xl">
