@@ -1,4 +1,4 @@
-# Betflix Web
+# Meetflix Web
 Welcome to the Movie Trailer Web project! This application serves as the frontend for a cinema management system, allowing users to browse movies, view trailers, and make bookings for currently showing movies. The system has distinct functionalities based on the user's role.
 
 # Project Roles and Purpose
