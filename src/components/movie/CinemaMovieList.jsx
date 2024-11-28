@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import MovieApi from '../../api/movieApi';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
@@ -27,27 +28,34 @@ const responsive = {
 };
 
 const CinemaMovieList = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const navigate = useNavigate();
+
+  // const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [selectedMovie, setSelectedMovie] = useState(null);
 
   const { data: movies, isLoading } = useQuery({
     queryKey: ['movies'],
     queryFn: MovieApi.getMovies,
   });
 
-  const showModal = (movie) => {
-    setSelectedMovie(movie);
-    setIsModalVisible(true);
-  };
+  // const showModal = (movie) => {
+  //   setSelectedMovie(movie);
+  //   setIsModalVisible(true);
+  // };
 
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-    setSelectedMovie(null);
-  };
+  // const handleModalClose = () => {
+  //   setIsModalVisible(false);
+  //   setSelectedMovie(null);
+  // };
 
   if (isLoading) {
-    return <Spin tip="Loading movies..." />; // Loading spinner while fetching movies
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spin tip="Loading movies..." />
+      </div>
+    ); 
   }
+  
 
   return (
     <div className="my-10 px-2 md:px-10 max-w-full">
@@ -60,7 +68,7 @@ const CinemaMovieList = () => {
             style={{
               backgroundImage: `url(${movie.urlImage})`,
             }}
-            onClick={() => showModal(movie)}
+            onClick={() => navigate(`/user/cinema_movies/${movie.id}`)}
           >
             <div className="hidden md:block bg-black w-full h-full opacity-40 absolute top-0 left-0 z-0" />
             <div className="relative p-4 flex flex-col items-center justify-end h-full">
@@ -72,9 +80,9 @@ const CinemaMovieList = () => {
         ))}
       </Carousel>
 
-      <Modal
+      {/* <Modal
         title={selectedMovie?.name || 'Movie Details'}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleModalClose}
         footer={null}
       >
@@ -95,7 +103,7 @@ const CinemaMovieList = () => {
             </Button>
           </div>
         )}
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

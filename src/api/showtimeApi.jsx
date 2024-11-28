@@ -4,13 +4,27 @@ const ShowtimeApi = {
   async createShowtime(showtimeData, movieId, theaterId, roomId) {
     configureAxios();
     try {
-      const response = await axiosInstance.post(`/showtime`, showtimeData, {
-        params: { movie: movieId, theater: theaterId, projectionRoom: roomId },
-      });
+      const response = await axiosInstance.post(
+        `api/v1/showtime`,
+        showtimeData,
+        {
+          params: {
+            movie: movieId,
+            theater: theaterId,
+            projectionRoom: roomId,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.createShowtime, showtimeData, movieId, theaterId, roomId);
+        return await TokenManager.handleTokenRefresh(
+          this.createShowtime,
+          showtimeData,
+          movieId,
+          theaterId,
+          roomId
+        );
       }
       console.error("Error creating showtime:", error);
       throw error;
@@ -18,31 +32,17 @@ const ShowtimeApi = {
   },
 
   async getShowtimesByMovieId(id) {
-    configureAxios();
-    try {
-      const response = await axiosInstance.get(`/showtime/movie/${id}`);
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.getShowtimesByMovieId, id);
-      }
-      console.error("Error fetching showtimes by movie ID:", error);
-      throw error;
-    }
+    const response = await axiosInstance.get(`api/v1/showtime/movie/${id}`, {
+      headers: { Authorization: undefined },
+    });
+    return response.data;
   },
 
   async getShowtimesByRoomId(id) {
-    configureAxios();
-    try {
-      const response = await axiosInstance.get(`/showtime/room/${id}`);
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.getShowtimesByRoomId, id);
-      }
-      console.error("Error fetching showtimes by room ID:", error);
-      throw error;
-    }
+    const response = await axiosInstance.get(`api/v1/showtime/room/${id}`, {
+      headers: { Authorization: undefined },
+    });
+    return response.data;
   },
 
   async updateShowtime(id, showtimeData) {
@@ -52,7 +52,11 @@ const ShowtimeApi = {
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.updateShowtime, id, showtimeData);
+        return await TokenManager.handleTokenRefresh(
+          this.updateShowtime,
+          id,
+          showtimeData
+        );
       }
       console.error("Error updating showtime:", error);
       throw error;
@@ -60,18 +64,11 @@ const ShowtimeApi = {
   },
 
   async getShowtimeFromOrder(requests) {
-    configureAxios();
-    try {
-      const response = await axiosInstance.post(`/showtime/order`, requests);
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.getShowtimeFromOrder, requests);
-      }
-      console.error("Error fetching showtime from order:", error);
-      throw error;
-    }
-  }
+    const response = await axiosInstance.post(`/showtime/order`, requests, {
+      headers: { Authorization: undefined },
+    });
+    return response.data;
+  },
 };
 
 export default ShowtimeApi;

@@ -18,12 +18,12 @@ const HomePage = ({ searchData }) => {
         ) : (
           <>
           
-            <h1 className=" text-red-700 text-3xl text-center font-bold font-[arial]">
+          
+            <h1 className="text-red-700 text-3xl text-center font-bold font-[arial]">
+              {" "}  <h1 className=" text-red-700 text-3xl text-center font-bold font-[arial]">
               Đặt vé phim
             </h1>
             <CinemaMovieList />
-            <h1 className="text-red-700 text-3xl text-center font-bold font-[arial]">
-              {" "}
               Xem trực tiếp trong kho phim
             </h1>
 

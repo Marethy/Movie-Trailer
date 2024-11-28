@@ -16,18 +16,12 @@ const TheaterApi = {
   },
 
   async getTheaters() {
-    configureAxios();
-    try {
-      const response = await axiosInstance.get(`/api/v1/theater`);
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.getTheaters);
-      }
-      console.error("Error fetching theaters:", error);
-      throw error;
-    }
+    const response = await axiosInstance.get(`/api/v1/theater`, {
+      headers: { Authorization: undefined }, 
+    });
+    return response.data;
   },
+  
 
   async updateTheater(theaterId, theaterData) {
     configureAxios();

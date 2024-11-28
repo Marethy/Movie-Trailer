@@ -12,8 +12,7 @@ import {
   Modal,
 } from "antd";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import TheaterApi from "../../api/theaterApi";
-import ProjectionRoom from "./ProjectionRoom"; // Import ProjectionRoom component
+import {TheaterApi} from "../../api";
 const { Text } = Typography;
 
 const TheaterManagement = () => {
@@ -177,7 +176,9 @@ const TheaterManagement = () => {
         </Form>
       </Modal>
       {loadingTheaters ? (
-        <Spin tip="Loading theaters..." />
+        <div className="flex justify-center items-center min-h-screen">
+          <Spin tip="Loading theaters..." />
+        </div>
       ) : (
         <div className="grid grid-cols-1  md:grid-cols-3 gap-10">
           {theaters.map((theater) => (

@@ -20,7 +20,7 @@ const RegisterPage = () => {
       message.success("Registration successful");
       navigate("/login"); // Redirect to login page after successful registration
     } catch (error) {
-      console.error("Error registering:", error);
+      console.log("Error registering:", error);
       message.error("User name or email already exists");
     } finally {
       setLoading(false);

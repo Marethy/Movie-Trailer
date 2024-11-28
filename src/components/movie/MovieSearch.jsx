@@ -25,7 +25,7 @@ const MovieSearch = ({ title, data }) => {
                 item.poster_path
               })`,
             }}
-            onClick={() => navigate(`/cinema/movies/${item.id}`)}
+            onClick={() => navigate(`/user/movies/${item.id}`)}
           >
             <div className="bg-black w-full h-full opacity-40 absolute top-0 left-0 z-0" />
             <div className="relative p-4 flex flex-col items-center justify-end h-full">

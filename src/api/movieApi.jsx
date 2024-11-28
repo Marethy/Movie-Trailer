@@ -2,25 +2,20 @@ import { axiosInstance, TokenManager, configureAxios } from "./apiClient";
 
 const MovieApi = {
   async getMovies() {
-     {
-      const response = await axiosInstance.get(`/api/v1/movie`,{
-        headers: { Authorization: undefined }, // Remove Authorization header
+    {
+      const response = await axiosInstance.get(`/api/v1/movie`, {
+        headers: { Authorization: undefined }, 
       });
       return response.data;
-    } 
+    }
   },
 
   async getMovieById(id) {
-    configureAxios();
-    try {
-      const response = await axiosInstance.get(`/api/v1/movie/${id}`);
+    {
+      const response = await axiosInstance.get(`/api/v1/movie/${id}`, {
+        headers: { Authorization: undefined },
+      });
       return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.getMovieById, id);
-      }
-      console.error("Error fetching movie:", error);
-      throw error;
     }
   },
 
@@ -31,7 +26,10 @@ const MovieApi = {
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.createMovie, movieData);
+        return await TokenManager.handleTokenRefresh(
+          this.createMovie,
+          movieData
+        );
       }
       console.error("Error creating movie:", error);
       throw error;
@@ -41,11 +39,18 @@ const MovieApi = {
   async updateMovie(id, movieData) {
     configureAxios();
     try {
-      const response = await axiosInstance.put(`/api/v1/movie/${id}`, movieData);
+      const response = await axiosInstance.put(
+        `/api/v1/movie/${id}`,
+        movieData
+      );
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.updateMovie, id, movieData);
+        return await TokenManager.handleTokenRefresh(
+          this.updateMovie,
+          id,
+          movieData
+        );
       }
       console.error("Error updating movie:", error);
       throw error;
@@ -66,48 +71,53 @@ const MovieApi = {
   },
 
   async getMoviesByIds(ids) {
-    configureAxios();
-    try {
-      const response = await axiosInstance.get(`/api/v1/movie/ids`, { params: { ids } });
+    {
+      const response = await axiosInstance.get(
+        `/api/v1/movie/ids`,
+        { params: { ids } },
+        { headers: { Authorization: undefined } }
+      );
       return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.getMoviesByIds, ids);
-      }
-      console.error("Error fetching movies by IDs:", error);
-      throw error;
     }
   },
 
   async getMoviesByTheater(theaterId) {
-    configureAxios();
-    try {
-      const response = await axiosInstance.get(`/api/v1/movie/theater/${theaterId}`);
+    {
+      const response = await axiosInstance.get(
+        `/api/v1/movie/theater/${theaterId}`,
+        { headers: { Authorization: undefined } }
+      );
       return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.getMoviesByTheater, theaterId);
-      }
-      console.error("Error fetching movies by theater ID:", error);
-      throw error;
     }
   },
 
   async rateMovie(ratingData) {
     configureAxios();
     try {
-      const response = await axiosInstance.put(`/api/v1/movie/rating`, ratingData);
+      const response = await axiosInstance.put(
+        `/api/v1/movie/rating`,
+        ratingData
+      );
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.rateMovie, ratingData);
+        return await TokenManager.handleTokenRefresh(
+          this.rateMovie,
+          ratingData
+        );
       }
       console.error("Error rating movie:", error);
       throw error;
     }
   },
 
-  async searchMovies(searchText, pageNo = 0, pageSize = 10, sortBy = "id", sortDir = "asc") {
+  async searchMovies(
+    searchText,
+    pageNo = 0,
+    pageSize = 10,
+    sortBy = "id",
+    sortDir = "asc"
+  ) {
     configureAxios();
     try {
       const response = await axiosInstance.get(`/api/v1/movie/search`, {
@@ -116,12 +126,19 @@ const MovieApi = {
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        return await TokenManager.handleTokenRefresh(this.searchMovies, searchText, pageNo, pageSize, sortBy, sortDir);
+        return await TokenManager.handleTokenRefresh(
+          this.searchMovies,
+          searchText,
+          pageNo,
+          pageSize,
+          sortBy,
+          sortDir
+        );
       }
       console.error("Error searching movies:", error);
       throw error;
     }
-  }
+  },
 };
 
 export default MovieApi;

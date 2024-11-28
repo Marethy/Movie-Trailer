@@ -70,9 +70,9 @@ const LoginPage = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="   grid md  :grid-cols-2 bg-black bg-opacity-40 items-center gap-10 max-w-6xl w-full">
+      <div className="grid md:grid-cols-2 bg-black bg-opacity-40 items-center gap-10 max-w-6xl w-full">
         <div className="hidden md:block text-white">
-          <h2 className="lg:text-5xl text-4xl font-extrabold lg:leading-[55px]">
+          <h2 className="lg:text-5xl text-4xl font-extrabold">
             Login for Exclusive Access
           </h2>
           <p className="text-lg mt-6 ">

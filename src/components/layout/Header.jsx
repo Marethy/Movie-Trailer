@@ -26,7 +26,7 @@ const Header = ({ setSearchData }) => {
   }, [search]); // Runs when search changes
 
   const handleSearch = async () => {
-    const url = `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&language=vi&page=1`;
+    const url = `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&language=en&page=1`;
     const options = {
       method: "GET",
       headers: {
@@ -42,6 +42,7 @@ const Header = ({ setSearchData }) => {
       const data = await response.json();
       message.success("Search successful");
       setSearchData(data.results);
+      console.log(data);
     } catch (error) {
       console.error(error);
       message.error("Failed to search, please try again.");
