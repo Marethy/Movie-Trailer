@@ -18,13 +18,41 @@ const UserApi = {
 
   },
 
-  // Override any Authorization header for this request
   async createUser(userData) {
     const response = await axiosInstance.post("/api/v1/user", userData, {
       headers: { Authorization: undefined }, // Remove Authorization header
     });
     return response.data;
   },
+  async updateUser(userId, userData){
+    configureAxios();
+    console.log(userId);
+    console.log(userData);
+    try {
+      const response = await axiosInstance.put(`/api/v1/user/${userId}`,userData);
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        return await TokenManager.handleTokenRefresh(this.updateUser, userId, userData);
+      }
+      console.error("Error updating user:", error);
+      throw error;
+    }
+    
+  },
+  async deleteUser(userId) {
+    configureAxios();
+    try {
+      const response = await axiosInstance.delete(`api/v1/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        return await TokenManager.handleTokenRefresh(this.deleteUser, userId);
+      }
+      console.error("Error deleting user:", error);
+      throw error;
+    }
+  }
 };
 
 export default UserApi;

@@ -4,6 +4,7 @@ import {
   Popconfirm,
   Form,
   Input,
+  Select,
   Spin,
   message,
   Modal,
@@ -14,6 +15,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserApi } from "../../api";
 import moment from "moment";
+import { RecordContext } from "react-admin";
 
 const UserManagement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -31,20 +33,32 @@ const UserManagement = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["users"]);
       message.success("User created successfully");
+      form.resetFields();
     },
-    onError: () => {
-      message.error("Failed to create user");
+    onError: (error) => {
+      if (error.response && error.response.data) {
+        const { message: errorMessage } = error.response.data;
+        message.error(`Failed to create user: ${errorMessage}`);
+      } else {
+        message.error("Failed to create user due to a network error");
+      }
     },
   });
 
   const updateUserMutation = useMutation({
-    mutationFn: UserApi.updateUser,
+    mutationFn: ({ userId, userData }) => UserApi.updateUser(userId, userData),
     onSuccess: () => {
       queryClient.invalidateQueries(["users"]);
       message.success("User updated successfully");
+      form.resetFields();
     },
-    onError: () => {
-      message.error("Failed to update user");
+    onError: (error) => {
+      if (error.response && error.response.data) {
+        const { message: errorMessage } = error.response.data;
+        message.error(`Failed to update user: ${errorMessage}`);
+      } else {
+        message.error("Failed to update user due to a network error");
+      }
     },
   });
 
@@ -56,7 +70,6 @@ const UserManagement = () => {
     },
     onError: () => {
       message.error("Failed to delete user");
-      console.log(error);
     },
   });
 
@@ -65,11 +78,11 @@ const UserManagement = () => {
     if (user) {
       form.setFieldsValue({
         ...user,
+        roles: user.roles.map((role) => role.name),
+
         dob: user.dob ? moment(user.dob) : null,
         is_active: !!user.is_active,
       });
-    } else {
-      //  form.resetFields();
     }
     setIsModalVisible(true);
   };
@@ -78,27 +91,30 @@ const UserManagement = () => {
     try {
       const values = await form.validateFields();
 
-      // Chuyển đổi dữ liệu đầu vào thành định dạng cần thiết
       const payload = {
         username: values.username,
-        password: values.password || "default_password", // Thêm password mặc định nếu không có
+        password: values.password || "default_password",
         email: values.email,
+        roles: values.roles.map((role, index) => ({
+          id: index, // Có thể thay đổi cách gán `id` theo yêu cầu backend
+          name: role,
+        })),
         birthday: values.dob ? values.dob.format("YYYY-MM-DD") : null,
         fullName: values.fullName,
         phoneNumber: values.phone,
         active: values.is_active ?? false,
       };
 
-      console.log("Payload to send:", payload);
-
       if (selectedUser) {
-        updateUserMutation.mutate({ id: selectedUser.id, ...payload });
+        updateUserMutation.mutate({
+          userId: selectedUser.id,
+          userData: payload,
+        });
       } else {
         createUserMutation.mutate(payload);
       }
 
       setIsModalVisible(false);
-      form.resetFields();
       setSelectedUser(null);
     } catch (error) {
       console.log(error);
@@ -122,6 +138,17 @@ const UserManagement = () => {
 
   const columns = [
     {
+      title: "Roles",
+      dataIndex: "roles",
+      key: "roles",
+      render: (roles) => roles.map((role) => role.name).join(", "),
+      sorter: (a, b) => {
+        const rolesA = a.roles.map((role) => role.name).join(", ");
+        const rolesB = b.roles.map((role) => role.name).join(", ");
+        return rolesA.localeCompare(rolesB);
+      },
+    },
+    {
       title: "Full Name",
       dataIndex: "fullName",
       key: "fullName",
@@ -133,6 +160,7 @@ const UserManagement = () => {
       key: "email",
       sorter: (a, b) => a.email.localeCompare(b.email),
     },
+
     {
       title: "Username",
       dataIndex: "username",
@@ -200,6 +228,24 @@ const UserManagement = () => {
           >
             <Input />
           </Form.Item>
+          <Form.Item
+            name="roles"
+            label="Roles"
+            rules={[
+              { required: true, message: "Please select at least one role!" },
+            ]}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Select roles"
+              options={[
+                { label: "Admin", value: "ADMIN" },
+                { label: "User", value: "USER" },
+                { label: "Moderator", value: "MODERATOR" },
+              ]}
+            />
+          </Form.Item>
+
           <Form.Item
             name="email"
             label="Email"
